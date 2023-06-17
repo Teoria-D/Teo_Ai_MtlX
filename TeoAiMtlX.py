@@ -5,11 +5,6 @@ import maya.cmds as mc
 import maya.mel as mel
 import math
 
-
-    
-
-
-    
     
 def createMaterial():
   # createMaterialでファイルパス取得
@@ -143,100 +138,34 @@ def makeTemplate(textures):
     return ai_name
         
     
+def setMatAtt(ai_name, file_attributes):
+    attribute_names = file_attributes['name']
+    convert_value = list(map(safe_float,file_attributes['value']))
+    rgbPropertyList = {'base_color':'.baseColor','specular_color':'.specularColor','transmission_color':'.transmissionColor','transmission_scatter':'.transmissionScatter','subsurface_color':'.subsurfaceColor','subsurface_radius':'.subsurfaceRadius','sheen_color':'.sheenColor','coat_color':'.coatColor','emission_color':'.emissionColor','opacity':'.opacity'}
+    lightPropertyList = {'base':'.base','metalness':'.metalness','diffuse_roughness':'.diffuseRoughness','specular':'.specular','specular_IOR':'.specular_IOR','specular_anisotropy':'.specularAnisotropy','specular_rotation':'.specularRotation','transmission':'.transmission','transmission_depth':'.transmissionDepth','transmission_scatter_anisotropy':'.transmissionScatterAnisotropy','transmission_dispersion':'.transmissionDispersion','transmission_extra_roughness':'.transmissionExtraRoughness','subsurface':'.subsurface','subsurface_scale':'.subsurfaceScale','subsurface_anisotropy':'.transmissionScatterAnisotropy','sheen':'.sheen','sheen_roughness':'.sheenRoughness','coat':'.coat','coat_roughness':'.coatRoughness','coat_anisotropy':'.coatAnisotropy','coat_rotation':'.coatRotation','coat_IOR':'.coatIOR','coat_affect_color':'.coatAffectColor','coat_affect_roughness':'.coatAffectRoughness','thin_film_thickness':'.thinFilmThickness','thin_film_IOR':'.thinFilmIOR','emission':'.emission'}
+
+    
+    for i in range(len(convert_value)):
+        attribute_name = attribute_names[i]
+        if attribute_name in rgbPropertyList:
+            setAttrRGB(ai_name, rgbPropertyList[attribute_name], convert_value[i])
+        elif attribute_name in lightPropertyList:
+            setAttrLight(ai_name, lightPropertyList[attribute_name], convert_value[i])
+    
 def safe_float(x):
     try:
         return float(x)
     except ValueError:
         return list(x.split(','))
-    
-def setMatAtt(ai_name, file_attributes):
-    attribute_names = file_attributes['name']
-    convert_value = list(map(safe_float,file_attributes['value']))
+        
+def setAttrRGB(ai_name, property_name, attribute_value):
+     cmds.setAttr(ai_name + property_name, float(attribute_value[0]), float(attribute_value[1]), float(attribute_value[2]),type='double3')
 
-    
-    for i in range(len(convert_value)):
-        if('base' == attribute_names[i]):
-            cmds.setAttr(ai_name + '.base', convert_value[i])
-        if('base_color' == attribute_names[i]):
-            cmds.setAttr(ai_name + '.baseColor', float(convert_value[i][0]),float(convert_value[i][1]),float(convert_value[i][2]),type='double3')
-        elif('metalness' == attribute_names[i]):
-            cmds.setAttr(ai_name + '.metalness', convert_value[i])
-        elif('diffuse_roughness' == attribute_names[i]):
-            cmds.setAttr(ai_name + '.diffuseRoughness', convert_value[i])
-        elif('specular' == attribute_names[i]):
-            cmds.setAttr(ai_name + '.specular', convert_value[i])
-        elif('specular_roughness' == attribute_names[i]):
-            cmds.setAttr(ai_name + '.specularRoughness', convert_value[i])
-        elif('specular_color' == attribute_names[i]):
-            cmds.setAttr(ai_name + '.specularColor', float(convert_value[i][0]),float(convert_value[i][1]),float(convert_value[i][2]),type='double3')
-        elif('specular_IOR' == attribute_names[i]):
-            cmds.setAttr(ai_name + '.specularIOR', convert_value[i])
-        elif('specular_anisotropy' == attribute_names[i]):
-            cmds.setAttr(ai_name + '.specularAnisotropy', convert_value[i])
-        elif('specular_rotation' == attribute_names[i]):
-            cmds.setAttr(ai_name + '.specularRotation', convert_value[i])
-        elif('transmission' == attribute_names[i]):
-            cmds.setAttr(ai_name + '.transmission', convert_value[i])
-        elif('transmission_color' == attribute_names[i]):
-            cmds.setAttr(ai_name + '.transmissionColor', float(convert_value[i][0]),float(convert_value[i][1]),float(convert_value[i][2]),type='double3')
-        elif('transmission_depth' == attribute_names[i]):
-            cmds.setAttr(ai_name + '.transmissionDepth', convert_value[i])
-        elif('transmission_scatter' == attribute_names[i]):
-            cmds.setAttr(ai_name + '.transmissionScatter', float(convert_value[i][0]),float(convert_value[i][1]),float(convert_value[i][2]),type='double3')
-        elif('transmission_scatter_anisotropy' == attribute_names[i]):
-            cmds.setAttr(ai_name + '.transmissionScatterAnisotropy', convert_value[i])
-        elif('transmission_dispersion' == attribute_names[i]):
-            cmds.setAttr(ai_name + '.transmissionDispersion', convert_value[i])
-        elif('transmission_extra_roughness' == attribute_names[i]):
-            cmds.setAttr(ai_name + '.transmissionExtraRoughness', convert_value[i])
-        elif('subsurface' == attribute_names[i]):
-            cmds.setAttr(ai_name + '.subsurface', convert_value[i])
-        elif('subsurface_color' == attribute_names[i]):
-            cmds.setAttr(ai_name + '.subsurfaceColor', float(convert_value[i][0]),float(convert_value[i][1]),float(convert_value[i][2]),type='double3')
-        elif('subsurface_radius' == attribute_names[i]):
-            cmds.setAttr(ai_name + '.subsurfaceRadius', float(convert_value[i][0]),float(convert_value[i][1]),float(convert_value[i][2]),type='double3')
-        elif('subsurface_scale' == attribute_names[i]):
-            cmds.setAttr(ai_name + '.subsurfaceScale', convert_value[i])
-        elif('subsurface_anisotropy' == attribute_names[i]):
-            cmds.setAttr(ai_name + '.subsurfaceAnisotropy', convert_value[i])
-        elif('sheen' == attribute_names[i]):
-            cmds.setAttr(ai_name + '.sheen', convert_value[i])
-        elif('sheen_color' == attribute_names[i]):
-            cmds.setAttr(ai_name + '.sheenColor', float(convert_value[i][0]),float(convert_value[i][1]),float(convert_value[i][2]),type='double3')
-        elif('sheen_roughness' == attribute_names[i]):
-            cmds.setAttr(ai_name + '.sheenRoughness', convert_value[i])
-        elif('coat' == attribute_names[i]):
-            cmds.setAttr(ai_name + '.coat', convert_value[i])
-        elif('coat_color' == attribute_names[i]):
-            cmds.setAttr(ai_name + '.coatColor', float(convert_value[i][0]),float(convert_value[i][1]),float(convert_value[i][2]),type='double3')
-        elif('coat_roughness' == attribute_names[i]):
-            cmds.setAttr(ai_name + '.coatRoughness', convert_value[i])
-        elif('coat_anisotropy' == attribute_names[i]):
-            cmds.setAttr(ai_name + '.coatAnisotropy', convert_value[i])
-        elif('coat_rotation' == attribute_names[i]):
-            cmds.setAttr(ai_name + '.coatRotation', convert_value[i])
-        elif('coat_IOR' == attribute_names[i]):
-            cmds.setAttr(ai_name + '.coatIOR', convert_value[i])
-        elif('coat_affect_color' == attribute_names[i]):
-            cmds.setAttr(ai_name + '.coatAffectColor', convert_value[i])
-        elif('coat_affect_roughness' == attribute_names[i]):
-            cmds.setAttr(ai_name + '.coatAffectRoughness', convert_value[i])
-        elif('thin_film_thickness' == attribute_names[i]):
-            cmds.setAttr(ai_name + '.thinFilmThickness', convert_value[i])
-        elif('thin_film_IOR' == attribute_names[i]):
-            cmds.setAttr(ai_name + '.thinFilmIOR', convert_value[i])
-        elif('emission' == attribute_names[i]):
-            cmds.setAttr(ai_name + '.emission', convert_value[i])
-        elif('emission_color' == attribute_names[i]):
-            cmds.setAttr(ai_name + '.emissionColor', float(convert_value[i][0]),float(convert_value[i][1]),float(convert_value[i][2]),type='double3')
-        elif('opacity' == attribute_names[i]):
-            cmds.setAttr(ai_name + '.opacity', float(convert_value[i][0]),float(convert_value[i][1]),float(convert_value[i][2]),type='double3')
-    
+def setAttrLight(ai_name, property_name, attribute_value):
+     cmds.setAttr(ai_name + property_name, float(attribute_value))
     
          
 with pm.window(title='autofilenode',width=300,height=50):
     with pm.horizontalLayout():
         pm.frameLayout(label='選択したmtlxファイルのアトリビュートをprintし、テクスチャをaistandardsurfaceに割り当てます',labelAlign='top');
         pm.button(label='MaterialX選択',command='createMaterial()')
-        
-                    
