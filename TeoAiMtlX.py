@@ -1,7 +1,3 @@
-#実装したいもの一覧
-#参照したmtlxファイル名をもとにaistandardsurfaceに名前をつける
-#textureフォルダがない場合にエラーを吐くのでフォルダが無くてもマテリアル生成できるように処理フローを変更
-
 import xml.etree.ElementTree as ET
 import pymel.core as pm
 import os
