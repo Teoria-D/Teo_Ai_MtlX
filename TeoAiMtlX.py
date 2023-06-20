@@ -7,7 +7,7 @@ import math
 
     
 def createMaterial():
-  # createMaterialでファイルパス取得
+    # createMaterialでファイルパス取得
     file_path = getFilePath()
 
     # ファイルパスから整形
